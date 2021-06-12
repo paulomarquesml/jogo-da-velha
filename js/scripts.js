@@ -5,6 +5,8 @@ const buttons = document.querySelectorAll("#buttons-container button");
 const messageContainer = document.querySelector("#message");
 let messageText = document.querySelector("#message p");
 let secondPlayer;
+let container = document.querySelector("#container");
+
 
 // ------contador------
 let player1 = 0;
@@ -25,6 +27,12 @@ for (let i = 0; i < boxes.length; i++) {
 
             if(player1 == player2) {
                 player1++;
+
+                if(secondPlayer == 'ai-player') {
+                    player2++;
+                    iaPlayer();
+                }
+
             } else {
                 player2++;
             }
@@ -32,6 +40,22 @@ for (let i = 0; i < boxes.length; i++) {
             checkWinCondition();
         }
     });
+}
+
+// -------game mode--------
+for(let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", () => {
+        secondPlayer = buttons[i].getAttribute("id");
+
+        for(let counter = 0; counter < buttons.length; counter++) {
+            buttons[counter].style.display = "none";
+        }
+    })
+
+    setTimeout(() => {
+        container.classList.remove('hide')
+    }, 2000);
+
 }
 
 function checkEl (player1, player2) {
@@ -205,3 +229,29 @@ function newRound() {
         boxesToRemove[i].parentNode.removeChild(boxesToRemove[i]);
     };
 }
+
+function iaPlayer () {
+    let cloneO = o.cloneNode(true);
+    let count = 0;
+    let filled = 0;
+
+    for(let i = 0; i < boxes.length; i++) {
+        let randomNumber = Math.floor(Math.random() * 5);
+
+        if(boxes[i].childNodes[0] == undefined) {
+            if(randomNumber <= 1) {
+                boxes[i].appendChild(cloneO);
+                count++;
+                break;
+            } else {
+                filled++;
+            }
+        }
+    }
+
+    if(count == 0 && filled < 9) {
+        iaPlayer();
+    }
+
+
+};
